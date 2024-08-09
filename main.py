@@ -252,6 +252,26 @@ def calculate_score(inputs):
             max_score += data["weight"]
     return score / max_score * 10 if max_score > 0 else 0
 
+def estimate_ranking(overall_score):
+    if overall_score >= 9.5:
+        return "1-3"
+    elif overall_score >= 9.0:
+        return "4-6"
+    elif overall_score >= 8.5:
+        return "7-10"
+    elif overall_score >= 8.0:
+        return "11-15"
+    elif overall_score >= 7.5:
+        return "16-20"
+    elif overall_score >= 7.0:
+        return "21-30"
+    elif overall_score >= 6.5:
+        return "31-50"
+    elif overall_score >= 6.0:
+        return "51-100"
+    else:
+        return "100+"
+
 def get_gpt4_recommendations(inputs):
     st.write("Generating recommendations with OpenAI's GPT-4...")
     prompt = f"Based on the following SEO audit results, provide recommendations for improvement:\n\n{inputs}\n\nPlease provide specific, actionable recommendations for each area that needs improvement."
@@ -302,6 +322,19 @@ def export_to_word(inputs, scores, recommendations):
 def main():
     st.title("SEO Page Ranking Calculator")
 
+    st.markdown("""
+    Created by Brandon Lazovic
+
+    This tool helps you evaluate the SEO potential of a web page by assessing various on-page, off-page, and technical factors. 
+    To use the tool:
+    1. Enter your OpenAI API key in the sidebar (for personalized recommendations).
+    2. Go through each factor and select 'Yes' or 'No' based on whether your page meets the criteria.
+    3. Click 'Calculate Score' to see your results and recommendations.
+    4. Download a detailed report of your audit.
+    
+    The tool provides an overall score and individual scores for on-page, off-page, and technical factors.
+    """)
+
     if not api_key:
         st.warning("Please enter your OpenAI API key in the sidebar to enable recommendations.")
 
@@ -312,14 +345,18 @@ def main():
             bucket_inputs[factor] = get_user_input(factor, data["criteria"])
         inputs[bucket] = bucket_inputs
 
-    if st.button("Calculate Score"):
-        scores = {}
-        for bucket, factors in seo_factors.items():
-            bucket_score = sum(calculate_score(inputs[bucket][factor]) for factor in factors)
-            scores[bucket] = bucket_score / len(factors)
+      if st.button("Calculate Score"):
+        with st.spinner("Calculating scores..."):
+            progress_bar = st.progress(0)
+            scores = {}
+            for i, (bucket, factors) in enumerate(seo_factors.items()):
+                bucket_score = sum(calculate_score(inputs[bucket][factor]) for factor in factors)
+                scores[bucket] = bucket_score / len(factors)
+                progress_bar.progress((i + 1) / len(seo_factors))
 
-        overall_score = sum(score * bucket_weights[bucket] for bucket, score in scores.items())
-        scores["Overall"] = overall_score
+            overall_score = sum(score * bucket_weights[bucket] for bucket, score in scores.items())
+            scores["Overall"] = overall_score
+            progress_bar.progress(100)
 
         st.subheader("SEO Scores")
         st.markdown("<div style='background-color: #e6f3ff; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
@@ -327,8 +364,26 @@ def main():
             st.write(f"{bucket}: {score:.2f}/10")
         st.markdown("</div>", unsafe_allow_html=True)
 
+        estimated_ranking = estimate_ranking(scores["Overall"])
+        st.subheader("Estimated Ranking")
+        st.write(f"Based on your overall score of {scores['Overall']:.2f}/10, your page might rank in positions: {estimated_ranking}")
+          
+        st.markdown("""
+      
+        **Note:** This ranking estimate is a rough approximation based on your SEO score. Actual rankings can vary significantly due to factors such as:
+        - Competition in your specific niche
+        - Search intent alignment
+        - Domain authority
+        - Freshness of content
+        - User engagement metrics
+        - Regular algorithm updates
+    
+        Use this estimate as a general guide rather than a guaranteed outcome.
+        """)
+
         if api_key:
-            recommendations = get_gpt4_recommendations(inputs)
+            with st.spinner("Generating recommendations..."):
+                recommendations = get_gpt4_recommendations(inputs)
             st.subheader("Recommendations")
             st.markdown("<div style='background-color: #e6ffe6; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
             st.write(recommendations)
@@ -336,8 +391,9 @@ def main():
         else:
             st.warning("OpenAI API key not provided. Recommendations are not available.")
 
-        # Generate the Word document
-        doc_bytes = export_to_word(inputs, scores, recommendations)
+        with st.spinner("Preparing download..."):
+            # Generate the Word document
+            doc_bytes = export_to_word(inputs, scores, recommendations)
 
         # Provide a download button for the generated document
         st.download_button(
