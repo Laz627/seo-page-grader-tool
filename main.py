@@ -122,11 +122,11 @@ bucket_weights = {
 }
 
 def get_user_input(factor, weight, explanation):
-    col1, col2 = st.sidebar.columns([3, 1])
+    col1, col2 = st.columns([3, 1])
     with col1:
         value = st.selectbox(f"{factor} (Weight: {weight})", ["Yes", "No", "N/A"], key=factor)
     with col2:
-        st.help(explanation)
+        st.button("?", key=f"help_{factor}", help=explanation)
     return value
 
 def calculate_score(inputs, factors):
