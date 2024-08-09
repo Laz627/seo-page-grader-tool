@@ -4,6 +4,8 @@ from openai import OpenAI
 import os
 import io
 from docx import Document
+import markdown
+from bs4 import BeautifulSoup
 
 def get_openai_api_key():
     if 'openai_api_key' not in st.session_state:
