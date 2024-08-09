@@ -208,16 +208,6 @@ import os
 from docx import Document
 import io
 
-# Set up the OpenAI API key prompt
-st.sidebar.title("Setup")
-openai_api_key = st.sidebar.text_input("Enter your OpenAI API key", type="password")
-os.environ["OPENAI_API_KEY"] = openai_api_key
-
-# Initialize OpenAI client
-client = OpenAI()
-
-# ... (keep the seo_factors dictionary and bucket_weights as they are)
-
 def get_user_input(factor, criteria):
     responses = {}
     st.subheader(factor)
