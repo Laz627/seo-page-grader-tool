@@ -213,7 +213,6 @@ def get_user_input(factor, criteria):
                 ">?</div>
             ''', unsafe_allow_html=True)
     
-    # Add a horizontal line after each factor
     st.markdown("<hr style='margin-top: 20px; margin-bottom: 20px;'>", unsafe_allow_html=True)
     
     return responses
@@ -225,18 +224,24 @@ def calculate_score(inputs):
         if data["response"] == "Yes":
             score += data["weight"]
         max_score += data["weight"]
-    return (score / max_score) * 10 if max_score > 0 else 0
+    return score / max_score * 10 if max_score > 0 else 0
 
 def get_gpt4_recommendations(inputs):
+    st.write("Generating recommendations with OpenAI's GPT-4...")
     prompt = f"Based on the following SEO audit results, provide recommendations for improvement:\n\n{inputs}\n\nPlease provide specific, actionable recommendations for each area that needs improvement."
-    response = client.chat.completions.create(
-        model="gpt-4",
-        messages=[
-            {"role": "system", "content": "You are an SEO expert providing recommendations based on an audit."},
-            {"role": "user", "content": prompt}
-        ]
-    )
-    return response.choices[0].message.content
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o",
+            messages=[
+                {"role": "system", "content": "You are an SEO expert providing recommendations based on an audit."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        st.write("Recommendations generated successfully!")
+        return response.choices[0].message.content
+    except Exception as e:
+        st.error(f"Error generating recommendations: {str(e)}")
+        return "Unable to generate recommendations at this time."
 
 def export_to_word(inputs, scores, recommendations):
     doc = Document()
@@ -252,31 +257,28 @@ def export_to_word(inputs, scores, recommendations):
     doc.add_heading('Scores', level=1)
     for bucket, score in scores.items():
         doc.add_paragraph(f"{bucket}: {score:.2f}/10")
-    doc.add_paragraph(f"Overall Score: {scores['Overall']:.2f}/10")
 
     doc.add_heading('Recommendations', level=1)
     doc.add_paragraph(recommendations)
 
     doc.save('seo_audit_results.docx')
+    st.success("Results exported to 'seo_audit_results.docx'")
 
 def main():
     st.title("SEO Ranking Likelihood Calculator")
 
     inputs = {}
     for bucket, factors in seo_factors.items():
-        st.sidebar.subheader(bucket)
         bucket_inputs = {}
         for factor, data in factors.items():
             bucket_inputs[factor] = get_user_input(factor, data["criteria"])
         inputs[bucket] = bucket_inputs
 
-    if st.sidebar.button("Calculate Score"):
+    if st.button("Calculate Score"):
         scores = {}
         for bucket, factors in seo_factors.items():
-            bucket_score = 0
-            for factor in factors.keys():
-                bucket_score += calculate_score(inputs[bucket][factor])
-            scores[bucket] = (bucket_score / len(factors)) * 10
+            bucket_score = sum(calculate_score(inputs[bucket][factor]) for factor in factors)
+            scores[bucket] = bucket_score / len(factors)
 
         overall_score = sum(score * bucket_weights[bucket] for bucket, score in scores.items())
         scores["Overall"] = overall_score
@@ -294,7 +296,6 @@ def main():
         st.markdown("</div>", unsafe_allow_html=True)
 
         export_to_word(inputs, scores, recommendations)
-        st.success("Results exported to 'seo_audit_results.docx'")
 
 if __name__ == "__main__":
     main()
