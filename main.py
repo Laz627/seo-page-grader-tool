@@ -184,14 +184,14 @@ def get_user_input(factor, criteria):
     responses = {}
     st.subheader(factor)
     for i, (criterion, weight, help_text) in enumerate(criteria):
-        col1, col2 = st.columns([4, 1])
+        col1, col2 = st.columns([8, 1])
         with col1:
             responses[criterion] = {
                 "response": st.radio(criterion, ["Yes", "No"], index=1, key=f"{factor}_{i}"),
                 "weight": weight
             }
         with col2:
-            st.markdown(f'<span title="{help_text}">❔</span>', unsafe_allow_html=True)
+            st.markdown(f'<span style="font-size:20px;" title="{help_text}">❓</span>', unsafe_allow_html=True)
     return responses
 
 def calculate_score(inputs):
@@ -238,20 +238,20 @@ def export_to_word(inputs, scores, recommendations):
 def main():
     st.title("SEO Ranking Likelihood Calculator")
 
-    inputs = {}
+    # Display sections with headers for each bucket
     for bucket, factors in seo_factors.items():
-        st.sidebar.subheader(bucket)
+        st.markdown(f"## {bucket} Factors")
         bucket_inputs = {}
         for factor, data in factors.items():
+            st.markdown(f"### {factor}")
             bucket_inputs[factor] = get_user_input(factor, data["criteria"])
-        inputs[bucket] = bucket_inputs
 
     if st.sidebar.button("Calculate Score"):
         scores = {}
         for bucket, factors in seo_factors.items():
             bucket_score = 0
             for factor in factors.keys():
-                bucket_score += calculate_score(inputs[bucket][factor])
+                bucket_score += calculate_score(bucket_inputs[factor])
             scores[bucket] = (bucket_score / len(factors)) * 10
 
         overall_score = sum(score * bucket_weights[bucket] for bucket, score in scores.items())
@@ -261,11 +261,11 @@ def main():
         for bucket, score in scores.items():
             st.write(f"{bucket}: {score:.2f}/10")
 
-        recommendations = get_gpt4_recommendations(inputs)
+        recommendations = get_gpt4_recommendations(bucket_inputs)
         st.subheader("Recommendations")
         st.write(recommendations)
 
-        export_to_word(inputs, scores, recommendations)
+        export_to_word(bucket_inputs, scores, recommendations)
         st.success("Results exported to 'seo_audit_results.docx'")
 
 if __name__ == "__main__":
