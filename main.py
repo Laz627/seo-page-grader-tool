@@ -7,7 +7,7 @@ from docx import Document
 
 # Set up the OpenAI API key prompt
 st.sidebar.title("Setup")
-openai_api_key = st.sidebar.text_input("Enter your OpenAI API key", type="password")
+openai_api_key = st.sidebar.text_input("Enter your OpenAI API key", type="password", key="openai_api_key")
 os.environ["OPENAI_API_KEY"] = openai_api_key
 
 # Initialize OpenAI client
