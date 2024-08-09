@@ -185,6 +185,23 @@ bucket_weights = {
     "Technical": 0.15
 }
 
+import streamlit as st
+import pandas as pd
+from openai import OpenAI
+import os
+from docx import Document
+import io
+
+# Set up the OpenAI API key prompt
+st.sidebar.title("Setup")
+openai_api_key = st.sidebar.text_input("Enter your OpenAI API key", type="password")
+os.environ["OPENAI_API_KEY"] = openai_api_key
+
+# Initialize OpenAI client
+client = OpenAI()
+
+# ... (keep the seo_factors dictionary and bucket_weights as they are)
+
 def get_user_input(factor, criteria):
     responses = {}
     st.subheader(factor)
@@ -228,6 +245,23 @@ def calculate_score(inputs):
         if data["response"] != "N/A":
             max_score += data["weight"]
     return score / max_score * 10 if max_score > 0 else 0
+
+def get_gpt4_recommendations(inputs):
+    st.write("Generating recommendations with OpenAI's GPT-4...")
+    prompt = f"Based on the following SEO audit results, provide recommendations for improvement:\n\n{inputs}\n\nPlease provide specific, actionable recommendations for each area that needs improvement."
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are an SEO expert providing recommendations based on an audit."},
+                {"role": "user", "content": prompt}
+            ]
+        )
+        st.write("Recommendations generated successfully!")
+        return response.choices[0].message.content
+    except Exception as e:
+        st.error(f"Error generating recommendations: {str(e)}")
+        return "Unable to generate recommendations at this time."
 
 def export_to_word(inputs, scores, recommendations):
     doc = Document()
