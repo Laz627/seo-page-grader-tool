@@ -3,3 +3,5 @@ pandas
 matplotlib
 openai
 python-docx
+markdown
+BeautifulSoup
