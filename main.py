@@ -8,109 +8,120 @@ from docx import Document
 # Set up OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Define the SEO factors, their weights, and explanations
+# Define the SEO factors with criteria and explanations
 seo_factors = {
     "On-Page": {
-        "H1 Tag": {
-            "weight": 8,
-            "explanation": "The main heading of the page. Should include the primary keyword and be unique."
-        },
-        "Meta Title": {
-            "weight": 9,
-            "explanation": "The title tag that appears in search results. Should be concise and include the primary keyword."
-        },
-        "Meta Description": {
-            "weight": 5,
-            "explanation": "A brief summary of the page content that appears in search results. Should include the primary keyword and act as a call-to-action."
-        },
-        "Proper Heading Hierarchy": {
-            "weight": 7,
-            "explanation": "Correct use of H1, H2, H3 tags in a logical structure."
-        },
-        "Image Alt Text": {
-            "weight": 4,
-            "explanation": "Descriptive text for images, including target keywords where appropriate."
-        },
-        "Schema Markup": {
-            "weight": 8,
-            "explanation": "Structured data that helps search engines understand the content of the page."
-        },
-        "Internal Linking": {
-            "weight": 7,
-            "explanation": "Links to and from other relevant pages on your website."
-        },
-        "User Engagement Metrics": {
-            "weight": 9,
-            "explanation": "Metrics like bounce rate, time on page, and CTR that indicate user satisfaction."
-        },
-        "Primary Topic/Keyword Targeting": {
-            "weight": 9,
-            "explanation": "Clear focus on a primary topic or keyword throughout the page content."
-        },
-        "URL Slug": {
-            "weight": 5,
-            "explanation": "The part of the URL that identifies the specific page. Should be short and include the primary keyword."
-        },
-        "Quality of Content": {
-            "weight": 9,
-            "explanation": "Well-written, original content that thoroughly covers the topic and matches user intent."
-        }
+        "H1 Tag": [
+            "Is Included On-Page At Top Of Heading Hierarchy",
+            "Contains Proper Length",
+            "Contains Primary Keyword",
+            "There Is Only A Single H1 Tag On-Page"
+        ],
+        "Meta Title": [
+            "Contains Proper Length",
+            "Contains Primary Keyword",
+            "There Is Only A Single Meta Title On-Page"
+        ],
+        "Meta Description": [
+            "Contains Proper Length",
+            "Contains Primary Keyword",
+            "There Is Only A Single Meta Description On-Page",
+            "Adequately Describes The Purpose Of The Page As A CTA"
+        ],
+        "Proper Heading Hierarchy": [
+            "Only A Single H1; H2s follow H1 tag; H3s follow H2s, etc…"
+        ],
+        "Image Alt Text": [
+            "Images Include Alt Text With Target Keyword",
+            "Alt Text Properly Describes Imagery In A Meaningful Way"
+        ],
+        "Schema Markup": [
+            "Schema Is Included On-Page As JSON-LD",
+            "No Errors Or Warnings With Schema Markup",
+            "Schema Markup Matches Page Intent"
+        ],
+        "Internal Linking": [
+            "Other Pages Properly Point To This One With Target Keyword Included In Anchor Text",
+            "This Page Logically Drives Users To The Next Anticipated Step In The User Journey",
+            "This Page Doesn’t Send Users To A Dead End Experience / Poor Off-Ramp"
+        ],
+        "User Engagement Metrics": [
+            "Bounce Rate Meets or Exceeds Baseline",
+            "Time Spent On-Page Meets or Exceeds Baseline",
+            "CTR / Average KW Position Meets or Exceeds Baseline",
+            "Visits Meet or Exceed Baseline",
+            "Conversions / Abandons Meet or Exceed Baseline",
+            "Scroll Depth Meets or Exceeds Baseline"
+        ],
+        "Primary Topic/Keyword Targeting": [
+            "Keyword Is Included Above The Fold In Content",
+            "Relevant Secondary Keywords Are Included Within Subheads / Body Copy Of Page",
+            "Page Matches Expected Keyword Intent"
+        ],
+        "URL Slug": [
+            "Short Length",
+            "Omission of Stop Words",
+            "Aligns With Informational Architecture Of Domain",
+            "Lowercase only",
+            "Hyphens only",
+            "Non-parameterized (optional)",
+            "ASCII characters only",
+            "Depth of 5 or less from the homepage"
+        ],
+        "Quality of Content": [
+            "Accuracy",
+            "Originality",
+            "Tone Of Voice Matches Brand Standards",
+            "Topic Completeness",
+            "Readability",
+            "Formatting (paragraph breaks, logical subheading structure)",
+            "Content Freshness / Regularly Updated",
+            "Page Matches Expected User Intent",
+            "Other Pages Don't Cannibalize This One For Content"
+        ]
     },
     "Off-Page": {
-        "Page Authority vs Top 10": {
-            "weight": 7,
-            "explanation": "How your page's authority compares to the average of the top 10 search results."
-        },
-        "Page Authority vs Top 3": {
-            "weight": 9,
-            "explanation": "How your page's authority compares to the average of the top 3 search results."
-        },
-        "Backlinks from Relevant Domains": {
-            "weight": 8,
-            "explanation": "Links from other websites in your industry or niche."
-        },
-        "Backlink Placement": {
-            "weight": 5,
-            "explanation": "Where the backlinks appear on the linking pages. Higher placement is generally better."
-        },
-        "Backlink Anchor Text": {
-            "weight": 7,
-            "explanation": "The clickable text of the backlinks. Should include relevant keywords."
-        },
-        "Backlink Traffic": {
-            "weight": 7,
-            "explanation": "The amount of traffic the linking pages receive."
-        }
+        "Page Authority vs Top 10": [
+            "Page Authority Is Greater Than Average Of Top 10 Results"
+        ],
+        "Page Authority vs Top 3": [
+            "Page Authority Is Greater Than Average Of Top 3 Results"
+        ],
+        "Backlinks from Relevant Domains": [
+            "Backlinks Are From Topically Relevant Domains"
+        ],
+        "Backlink Placement": [
+            "Backlinks Are Placed Higher Up On Sourced Pages / Are Likely To Be Clicked"
+        ],
+        "Backlink Anchor Text": [
+            "Backlinks Contain Topically Relevant Anchor Text"
+        ],
+        "Backlink Traffic": [
+            "Backlinks Are Placed On Pages That Actually Drive Visits"
+        ]
     },
     "Technical": {
-        "Canonical Tag": {
-            "weight": 7,
-            "explanation": "Specifies the preferred version of a page to search engines."
-        },
-        "Hreflang Tag": {
-            "weight": 6,
-            "explanation": "Tells search engines which language you're using on a specific page."
-        },
-        "Indexability": {
-            "weight": 9,
-            "explanation": "Whether search engines are allowed to index the page."
-        },
-        "Sitemap Inclusion": {
-            "weight": 5,
-            "explanation": "Whether the page is included in the website's XML sitemap."
-        },
-        "Page Orphan Status": {
-            "weight": 5,
-            "explanation": "Whether the page is linked to from other pages on the site."
-        },
-        "Renderability": {
-            "weight": 7,
-            "explanation": "Whether search engines can properly render and understand the page content."
-        },
-        "Web Core Vitals": {
-            "weight": 6,
-            "explanation": "Google's metrics for page experience, including loading performance, interactivity, and visual stability."
-        }
+        "Canonical Tag": [
+            "Canonical Tag Contains Self-Reference"
+        ],
+        "Hreflang Tag": [
+            "Hreflang Tag (Optional) Is Correct, Targets The Right Locations, And References Other Translated Page Equivalents"
+        ],
+        "Indexability": [
+            "Page Is Indexable By Search Engines / Isn’t Blocked By Meta Tags Or Robots.txt"
+        ],
+        "Sitemap Inclusion": [
+            "Page Is Included In Sitemap.xml file"
+        ],
+        "Page Orphan Status": [
+            "Page Isn’t Orphaned"
+        ],
+        "Renderability": [
+            "Page Elements Are Renderable By Search Engines"
+        ],
+        "Web Core Vitals": [
+            "Page Passes Web Core Vitals Metrics / Exceeds Industry Average"
+        ]
     }
 }
 
@@ -121,23 +132,20 @@ bucket_weights = {
     "Technical": 0.15
 }
 
-def get_user_input(factor, weight, explanation):
-    col1, col2 = st.columns([3, 1])
-    with col1:
-        value = st.selectbox(f"{factor} (Weight: {weight})", ["Yes", "No", "N/A"], key=factor)
-    with col2:
-        st.button("?", key=f"help_{factor}", help=explanation)
-    return value
+def get_user_input(factor, criteria):
+    responses = {}
+    st.subheader(factor)
+    for criterion in criteria:
+        responses[criterion] = st.radio(criterion, ["Yes", "No"], index=1)
+    return responses
 
 def calculate_score(inputs, factors):
     score = 0
-    max_score = 0
-    for factor, data in factors.items():
-        if inputs[factor] == "Yes":
-            score += data["weight"]
-        if inputs[factor] != "N/A":
-            max_score += data["weight"]
-    return (score / max_score) * 10 if max_score > 0 else 0
+    max_score = len(inputs)
+    for criterion, response in inputs.items():
+        if response == "Yes":
+            score += 1
+    return (score / max_score) * 10
 
 def get_gpt4_recommendations(inputs):
     prompt = f"Based on the following SEO audit results, provide recommendations for improvement:\n\n{inputs}\n\nPlease provide specific, actionable recommendations for each area that needs improvement."
@@ -150,16 +158,16 @@ def get_gpt4_recommendations(inputs):
     )
     return response.choices[0].message.content
 
-def export_to_word(inputs, scores, recommendations, export_details):
+def export_to_word(inputs, scores, recommendations):
     doc = Document()
     doc.add_heading('SEO Audit Results', 0)
 
     for bucket, factors in seo_factors.items():
         doc.add_heading(f"{bucket} Factors", level=1)
-        for factor, data in factors.items():
-            doc.add_paragraph(f"{factor} (Weight: {data['weight']}): {inputs[factor]}")
-            if factor in export_details:
-                doc.add_paragraph(f"Details: {export_details[factor]}")
+        for factor, criteria in factors.items():
+            doc.add_heading(factor, level=2)
+            for criterion, response in inputs[factor].items():
+                doc.add_paragraph(f"{criterion}: {response}")
 
     doc.add_heading('Scores', level=1)
     for bucket, score in scores.items():
@@ -175,19 +183,20 @@ def main():
     st.title("SEO Ranking Likelihood Calculator")
 
     inputs = {}
-    export_details = {}
     for bucket, factors in seo_factors.items():
         st.sidebar.subheader(bucket)
-        for factor, data in factors.items():
-            inputs[factor] = get_user_input(factor, data["weight"], data["explanation"])
-            if st.sidebar.checkbox(f"Add details for {factor}"):
-                export_details[factor] = st.sidebar.text_area(f"{factor} details", key=f"{factor}_details")
+        bucket_inputs = {}
+        for factor, criteria in factors.items():
+            bucket_inputs[factor] = get_user_input(factor, criteria)
+        inputs[bucket] = bucket_inputs
 
     if st.sidebar.button("Calculate Score"):
         scores = {}
         for bucket, factors in seo_factors.items():
-            bucket_score = calculate_score({k: inputs[k] for k in factors.keys()}, factors)
-            scores[bucket] = bucket_score
+            bucket_score = 0
+            for factor in factors.keys():
+                bucket_score += calculate_score(inputs[bucket][factor], factors[factor])
+            scores[bucket] = (bucket_score / len(factors)) * 10
 
         overall_score = sum(score * bucket_weights[bucket] for bucket, score in scores.items())
         scores["Overall"] = overall_score
@@ -207,7 +216,7 @@ def main():
         st.subheader("Recommendations")
         st.write(recommendations)
 
-        export_to_word(inputs, scores, recommendations, export_details)
+        export_to_word(inputs, scores, recommendations)
         st.success("Results exported to 'seo_audit_results.docx'")
 
 if __name__ == "__main__":
