@@ -135,8 +135,8 @@ bucket_weights = {
 def get_user_input(factor, criteria):
     responses = {}
     st.subheader(factor)
-    for criterion in criteria:
-        responses[criterion] = st.radio(criterion, ["Yes", "No"], index=1)
+    for i, criterion in enumerate(criteria):
+        responses[criterion] = st.radio(criterion, ["Yes", "No"], index=1, key=f"{factor}_{i}")
     return responses
 
 def calculate_score(inputs, factors):
