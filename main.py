@@ -186,8 +186,17 @@ bucket_weights = {
 
 def get_user_input(factor, criteria):
     responses = {}
-    st.subheader(factor)
-    st.markdown(f"<div style='background-color: #f0f2f6; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
+    st.markdown(f"""
+    <div style='
+        background-color: #f0f2f6;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #d1d5db;
+    '>
+        <h3 style='margin-top: 0;'>{factor}</h3>
+    """, unsafe_allow_html=True)
+    
     for i, (criterion, weight, help_text) in enumerate(criteria):
         col1, col2 = st.columns([4, 1])
         with col1:
@@ -212,6 +221,7 @@ def get_user_input(factor, criteria):
                     margin: auto;
                 ">?</div>
             ''', unsafe_allow_html=True)
+    
     st.markdown("</div>", unsafe_allow_html=True)
     return responses
 
