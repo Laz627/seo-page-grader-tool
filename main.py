@@ -289,7 +289,7 @@ def get_gpt4_recommendations(inputs):
         st.error(f"Error generating recommendations: {str(e)}")
         return "Unable to generate recommendations at this time."
 
-def export_to_word(inputs, scores, recommendations):
+def export_to_word(inputs, scores, recommendations, estimated_ranking):
     doc = Document()
     doc.add_heading('SEO Audit Results', 0)
 
@@ -297,10 +297,46 @@ def export_to_word(inputs, scores, recommendations):
     doc.add_heading('Scores', level=1)
     for bucket, score in scores.items():
         doc.add_paragraph(f"{bucket}: {score:.2f}/10")
+    
+    # Estimated Ranking
+    doc.add_heading('Estimated Ranking', level=1)
+    doc.add_paragraph(f"Based on the overall score of {scores['Overall']:.2f}/10, the page might rank in positions: {estimated_ranking}")
 
     # Recommendations
     doc.add_heading('Recommendations', level=1)
-    doc.add_paragraph(recommendations)
+
+    # Convert markdown to HTML
+    html = markdown.markdown(recommendations)
+
+    # Parse HTML
+    soup = BeautifulSoup(html, 'html.parser')
+    
+    # Function to add formatted text to the document
+    def add_formatted_text(element, level=0):
+        if element.name == 'h3':
+            doc.add_heading(element.text, level=2)
+        elif element.name == 'h4':
+            doc.add_heading(element.text, level=3)
+        elif element.name == 'p':
+            doc.add_paragraph(element.text)
+        elif element.name == 'ul':
+            for li in element.find_all('li', recursive=False):
+                doc.add_paragraph(li.text, style='List Bullet')
+        elif element.name == 'ol':
+            for i, li in enumerate(element.find_all('li', recursive=False), 1):
+                doc.add_paragraph(f"{i}. {li.text}", style='List Number')
+        elif element.name == 'strong':
+            doc.add_paragraph(element.text).bold = True
+        else:
+            for child in element.children:
+                if isinstance(child, str):
+                    doc.add_paragraph(child)
+                else:
+                    add_formatted_text(child, level+1)
+
+    # Add formatted recommendations
+    for element in soup.body.children:
+        add_formatted_text(element)
 
     # Selected Criteria
     doc.add_heading('Selected Criteria', level=1)
@@ -393,7 +429,7 @@ def main():
 
         with st.spinner("Preparing download..."):
             # Generate the Word document
-            doc_bytes = export_to_word(inputs, scores, recommendations)
+            doc_bytes = export_to_word(inputs, scores, recommendations, estimated_ranking)
 
         # Provide a download button for the generated document
         st.download_button(
