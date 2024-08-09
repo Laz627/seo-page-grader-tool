@@ -5,13 +5,29 @@ import os
 import io
 from docx import Document
 
+def get_openai_api_key():
+    if 'openai_api_key' not in st.session_state:
+        st.session_state.openai_api_key = ''
+    
+    api_key = st.sidebar.text_input(
+        "Enter your OpenAI API key",
+        value=st.session_state.openai_api_key,
+        type="password",
+        key="openai_api_key_input"
+    )
+    
+    if api_key:
+        st.session_state.openai_api_key = api_key
+        os.environ["OPENAI_API_KEY"] = api_key
+        return api_key
+    return None
+
 # Set up the OpenAI API key prompt
 st.sidebar.title("Setup")
-openai_api_key = st.sidebar.text_input("Enter your OpenAI API key", type="password", key="openai_api_key")
-os.environ["OPENAI_API_KEY"] = openai_api_key
+api_key = get_openai_api_key()
 
-# Initialize OpenAI client
-client = OpenAI()
+# Initialize OpenAI client only if API key is provided
+client = OpenAI() if api_key else None
 
 # Define the SEO factors with criteria, explanations, and weights
 seo_factors = {
@@ -294,7 +310,10 @@ def export_to_word(inputs, scores, recommendations):
     return doc_bytes
 
 def main():
-    st.title("SEO Ranking Likelihood Calculator")
+    st.title("SEO Page Ranking Calculator")
+
+    if not api_key:
+        st.warning("Please enter your OpenAI API key in the sidebar to enable recommendations.")
 
     inputs = {}
     for bucket, factors in seo_factors.items():
@@ -318,11 +337,14 @@ def main():
             st.write(f"{bucket}: {score:.2f}/10")
         st.markdown("</div>", unsafe_allow_html=True)
 
-        recommendations = get_gpt4_recommendations(inputs)
-        st.subheader("Recommendations")
-        st.markdown("<div style='background-color: #e6ffe6; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
-        st.write(recommendations)
-        st.markdown("</div>", unsafe_allow_html=True)
+        if api_key:
+            recommendations = get_gpt4_recommendations(inputs)
+            st.subheader("Recommendations")
+            st.markdown("<div style='background-color: #e6ffe6; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
+            st.write(recommendations)
+            st.markdown("</div>", unsafe_allow_html=True)
+        else:
+            st.warning("OpenAI API key not provided. Recommendations are not available.")
 
         # Generate the Word document
         doc_bytes = export_to_word(inputs, scores, recommendations)
