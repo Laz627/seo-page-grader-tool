@@ -196,7 +196,22 @@ def get_user_input(factor, criteria):
                 "weight": weight
             }
         with col2:
-            st.markdown(f'<div title="{help_text}" style="cursor: help; background-color: #e1e4e8; padding: 5px; border-radius: 50%; text-align: center; font-weight: bold;">?</div>', unsafe_allow_html=True)
+            st.markdown(f'''
+                <div title="{help_text}" style="
+                    cursor: help;
+                    background-color: #e1e4e8;
+                    color: #0366d6;
+                    width: 20px;
+                    height: 20px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    font-size: 14px;
+                    margin: auto;
+                ">?</div>
+            ''', unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
     return responses
 
