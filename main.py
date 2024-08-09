@@ -315,28 +315,34 @@ def export_to_word(inputs, scores, recommendations, estimated_ranking):
     
     # Function to add formatted text to the document
     def add_formatted_text(element, level=0):
-        if isinstance(element, str):
-            doc.add_paragraph(element)
+        if isinstance(element, str) and element.strip():
+            doc.add_paragraph(element.strip())
         elif element.name == 'h3':
-            doc.add_heading(element.text, level=2)
+            doc.add_heading(element.text.strip(), level=2)
         elif element.name == 'h4':
-            doc.add_heading(element.text, level=3)
+            doc.add_heading(element.text.strip(), level=3)
         elif element.name == 'p':
-            doc.add_paragraph(element.text)
+            if element.text.strip():
+                doc.add_paragraph(element.text.strip())
         elif element.name == 'ul':
             for li in element.find_all('li', recursive=False):
-                doc.add_paragraph(li.text, style='List Bullet')
+                if li.text.strip():
+                    doc.add_paragraph(li.text.strip(), style='List Bullet')
         elif element.name == 'ol':
             for i, li in enumerate(element.find_all('li', recursive=False), 1):
-                doc.add_paragraph(f"{i}. {li.text}", style='List Number')
+                if li.text.strip():
+                    doc.add_paragraph(f"{i}. {li.text.strip()}", style='List Number')
         elif element.name == 'strong':
-            doc.add_paragraph(element.text).bold = True
+            if element.text.strip():
+                p = doc.add_paragraph()
+                p.add_run(element.text.strip()).bold = True
         else:
             for child in element.children:
-                add_formatted_text(child, level+1)
+                if not isinstance(child, str) or child.strip():
+                    add_formatted_text(child, level+1)
 
     # Add formatted recommendations
-    for element in soup.descendants:
+    for element in soup.find_all(['h3', 'h4', 'p', 'ul', 'ol', 'strong']):
         add_formatted_text(element)
 
     # Selected Criteria
