@@ -22,6 +22,13 @@ def get_openai_api_key():
         return api_key
     return None
 
+# Set up the OpenAI API key prompt
+st.sidebar.title("Setup")
+api_key = get_openai_api_key()
+
+# Initialize OpenAI client only if API key is provided
+client = OpenAI() if api_key else None
+
 # Define the SEO factors with criteria, explanations, and weights
 seo_factors = {
     "On-Page": {
