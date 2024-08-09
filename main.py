@@ -188,16 +188,6 @@ def get_user_input(factor, criteria):
     responses = {}
     st.subheader(factor)
     
-    # Start the box that will surround all criteria for this factor
-    st.markdown(f"""
-    <div style='
-        border: 1px solid black;
-        padding: 10px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-    '>
-    """, unsafe_allow_html=True)
-    
     for i, (criterion, weight, help_text) in enumerate(criteria):
         col1, col2 = st.columns([4, 1])
         with col1:
@@ -223,8 +213,8 @@ def get_user_input(factor, criteria):
                 ">?</div>
             ''', unsafe_allow_html=True)
     
-    # Close the box that surrounds all criteria for this factor
-    st.markdown("</div>", unsafe_allow_html=True)
+    # Add a horizontal line after each factor
+    st.markdown("<hr style='margin-top: 20px; margin-bottom: 20px;'>", unsafe_allow_html=True)
     
     return responses
 
