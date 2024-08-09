@@ -276,7 +276,19 @@ def estimate_ranking(overall_score):
 
 def get_gpt4_recommendations(inputs):
     st.write("Generating recommendations with OpenAI's GPT-4...")
-    prompt = f"Based on the following SEO audit results, provide recommendations for improvement:\n\n{inputs}\n\nPlease provide specific, actionable recommendations for each area that needs improvement."
+    prompt = f"""Based on the following SEO audit results, provide recommendations for improvement:
+
+{inputs}
+
+Please provide specific, actionable recommendations for each area that needs improvement. Use the following format:
+
+### [Main Category]
+**[Subcategory]**
+- Action: [Specific recommendation]
+- Action: [Another specific recommendation]
+
+Repeat this structure for each category and subcategory that needs improvement."""
+
     try:
         response = client.chat.completions.create(
             model="gpt-4o",
@@ -307,43 +319,35 @@ def export_to_word(inputs, scores, recommendations, estimated_ranking):
     # Recommendations
     doc.add_heading('Recommendations', level=1)
     
-    # Convert markdown to HTML
-    html = markdown.markdown(recommendations)
+    # Split recommendations into lines
+    rec_lines = recommendations.split('\n')
     
-    # Parse HTML
-    soup = BeautifulSoup(html, 'html.parser')
-    
-    # Function to add formatted text to the document
-    def add_formatted_text(element, level=0):
-        if isinstance(element, str) and element.strip():
-            doc.add_paragraph(element.strip())
-        elif element.name == 'h3':
-            doc.add_heading(element.text.strip(), level=2)
-        elif element.name == 'h4':
-            doc.add_heading(element.text.strip(), level=3)
-        elif element.name == 'p':
-            if element.text.strip():
-                doc.add_paragraph(element.text.strip())
-        elif element.name == 'ul':
-            for li in element.find_all('li', recursive=False):
-                if li.text.strip():
-                    doc.add_paragraph(li.text.strip(), style='List Bullet')
-        elif element.name == 'ol':
-            for i, li in enumerate(element.find_all('li', recursive=False), 1):
-                if li.text.strip():
-                    doc.add_paragraph(f"{i}. {li.text.strip()}", style='List Number')
-        elif element.name == 'strong':
-            if element.text.strip():
-                p = doc.add_paragraph()
-                p.add_run(element.text.strip()).bold = True
+    current_heading = None
+    for line in rec_lines:
+        line = line.strip()
+        if not line:
+            continue
+        
+        if line.startswith('###'):
+            # Main heading
+            doc.add_heading(line.strip('# '), level=2)
+            current_heading = None
+        elif line.startswith('**') and line.endswith('**'):
+            # Subheading
+            doc.add_heading(line.strip('*'), level=3)
+            current_heading = line.strip('*')
+        elif line.startswith('-') or line.startswith('*'):
+            # Bullet point
+            doc.add_paragraph(line.strip('- *'), style='List Bullet')
+        elif line.startswith('1.') or line.startswith('2.') or line.startswith('3.'):
+            # Numbered list
+            doc.add_paragraph(line, style='List Number')
         else:
-            for child in element.children:
-                if not isinstance(child, str) or child.strip():
-                    add_formatted_text(child, level+1)
-
-    # Add formatted recommendations
-    for element in soup.find_all(['h3', 'h4', 'p', 'ul', 'ol', 'strong']):
-        add_formatted_text(element)
+            # Regular paragraph
+            if current_heading:
+                doc.add_paragraph(f"{current_heading}: {line}")
+            else:
+                doc.add_paragraph(line)
 
     # Selected Criteria
     doc.add_heading('Selected Criteria', level=1)
