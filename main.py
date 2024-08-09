@@ -345,7 +345,7 @@ def main():
             bucket_inputs[factor] = get_user_input(factor, data["criteria"])
         inputs[bucket] = bucket_inputs
 
-      if st.button("Calculate Score"):
+    if st.button("Calculate Score"):
         with st.spinner("Calculating scores..."):
             progress_bar = st.progress(0)
             scores = {}
