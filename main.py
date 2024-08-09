@@ -257,7 +257,7 @@ def get_gpt4_recommendations(inputs):
     prompt = f"Based on the following SEO audit results, provide recommendations for improvement:\n\n{inputs}\n\nPlease provide specific, actionable recommendations for each area that needs improvement."
     try:
         response = client.chat.completions.create(
-            model="gpt-4",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are an SEO expert providing recommendations based on an audit."},
                 {"role": "user", "content": prompt}
