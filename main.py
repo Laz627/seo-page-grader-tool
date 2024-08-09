@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 from openai import OpenAI
 import os
+import io
 from docx import Document
 
 # Set up the OpenAI API key prompt
@@ -261,8 +262,12 @@ def export_to_word(inputs, scores, recommendations):
     doc.add_heading('Recommendations', level=1)
     doc.add_paragraph(recommendations)
 
-    doc.save('seo_audit_results.docx')
-    st.success("Results exported to 'seo_audit_results.docx'")
+    # Save the document to a BytesIO object
+    doc_bytes = io.BytesIO()
+    doc.save(doc_bytes)
+    doc_bytes.seek(0)
+    
+    return doc_bytes
 
 def main():
     st.title("SEO Ranking Likelihood Calculator")
@@ -295,7 +300,16 @@ def main():
         st.write(recommendations)
         st.markdown("</div>", unsafe_allow_html=True)
 
-        export_to_word(inputs, scores, recommendations)
+        # Generate the Word document
+        doc_bytes = export_to_word(inputs, scores, recommendations)
+
+        # Provide a download button for the generated document
+        st.download_button(
+            label="Download SEO Audit Results",
+            data=doc_bytes,
+            file_name="seo_audit_results.docx",
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        )
 
 if __name__ == "__main__":
     main()
