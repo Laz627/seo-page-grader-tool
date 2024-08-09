@@ -4,4 +4,4 @@ matplotlib
 openai
 python-docx
 markdown
-BeautifulSoup
+beautifulsoup4
