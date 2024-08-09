@@ -8,7 +8,7 @@ from docx import Document
 st.sidebar.title("Setup")
 openai_api_key = st.sidebar.text_input("Enter your OpenAI API key", type="password")
 
-# Define the SEO factors with criteria and weights
+# Define the SEO factors with criteria, explanations, and weights
 seo_factors = {
     "On-Page": {
         "H1 Tag": {
@@ -184,12 +184,14 @@ def get_user_input(factor, criteria):
     responses = {}
     st.subheader(factor)
     for i, (criterion, weight, help_text) in enumerate(criteria):
-        with st.expander(f"{criterion} [Info]"):
+        col1, col2 = st.columns([4, 1])
+        with col1:
             responses[criterion] = {
-                "response": st.radio("", ["Yes", "No"], index=1, key=f"{factor}_{i}"),
-                "weight": weight,
-                "help": help_text
+                "response": st.radio(criterion, ["Yes", "No"], index=1, key=f"{factor}_{i}"),
+                "weight": weight
             }
+        with col2:
+            st.markdown(f'<span title="{help_text}">❔</span>', unsafe_allow_html=True)
     return responses
 
 def calculate_score(inputs):
