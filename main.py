@@ -36,164 +36,418 @@ seo_factors = {
     "On-Page": {
         "H1 Tag": {
             "criteria": [
-                ("Is Included On-Page At Top Of Heading Hierarchy", 10, "The H1 tag is the main heading of the page. It should include the primary keyword and be unique, as it signals to search engines and users what the page is about."),
-                ("Contains Proper Length", 8, "The H1 tag should be of appropriate length to ensure clarity and relevance."),
-                ("Contains Primary Keyword", 9, "Including the primary keyword in the H1 tag helps with search engine indexing and ranking."),
-                ("There Is Only A Single H1 Tag On-Page", 8, "Having only one H1 tag ensures clarity in the page's structure and prevents confusion for search engines.")
+                (
+                    "Is included on-page at top of heading hierarchy",
+                    10,
+                    "The H1 tag is the main heading of the page and should be placed at the top of the content. It's crucial for SEO as it helps search engines understand the main topic of the page. To check this, view the page source and look for the <h1> tag, ensuring it's the first heading in the HTML structure.",
+                ),
+                (
+                    "Contains proper length",
+                    8,
+                    "The H1 tag should be between 20-70 characters long. This length ensures it's descriptive enough for search engines while remaining concise for users. You can check the length by copying the H1 text and using a character counter tool.",
+                ),
+                (
+                    "Contains primary keyword",
+                    9,
+                    "Including the primary keyword in the H1 tag helps search engines understand the main topic of the page. It should be placed naturally within the H1 text. To verify, check if your target keyword appears in the H1 tag.",
+                ),
+                (
+                    "There is only a single H1 tag on-page",
+                    8,
+                    "Having only one H1 tag per page is a best practice for SEO. Multiple H1 tags can confuse search engines about the main topic of the page. To check, use the browser's 'Inspect' tool and search for 'h1' in the HTML.",
+                ),
             ]
         },
         "Meta Title": {
             "criteria": [
-                ("Contains Proper Length", 9, "The meta title should be concise and to the point, making it easy for users and search engines to understand."),
-                ("Contains Primary Keyword", 10, "Including the primary keyword in the meta title helps search engines index the page."),
-                ("There Is Only A Single Meta Title On-Page", 8, "Having a single meta title avoids confusion and ensures that the page is properly indexed.")
+                (
+                    "Contains proper length",
+                    9,
+                    "The meta title should be 50-60 characters long. This ensures it's fully displayed in search results without being cut off. You can check the length using SEO tools like Moz's Title Tag Preview tool.",
+                ),
+                (
+                    "Contains primary keyword",
+                    10,
+                    "Including the primary keyword in the meta title helps search engines understand what the page is about. Place the keyword naturally near the beginning of the title. You can view the meta title in the page source or using SEO browser extensions.",
+                ),
+                (
+                    "There is only a single meta title on-page",
+                    8,
+                    "Each page should have only one meta title tag. Multiple title tags can confuse search engines. Check the page source to ensure there's only one <title> tag in the <head> section.",
+                ),
             ]
         },
         "Meta Description": {
             "criteria": [
-                ("Contains Proper Length", 5, "A meta description of proper length ensures that the summary is clear and complete."),
-                ("Contains Primary Keyword", 6, "Including the primary keyword in the meta description helps search engines understand the page content."),
-                ("There Is Only A Single Meta Description On-Page", 4, "A single meta description prevents duplicate content issues."),
-                ("Adequately Describes The Purpose Of The Page As A CTA", 5, "A meta description that acts as a call-to-action can improve click-through rates.")
+                (
+                    "Contains proper length",
+                    5,
+                    "The ideal meta description length is between 150-160 characters. This length allows for a comprehensive summary without being cut off in search results. Use SEO tools or character counters to check the length.",
+                ),
+                (
+                    "Contains primary keyword",
+                    6,
+                    "Including the primary keyword in the meta description helps improve click-through rates from search results. Place the keyword naturally within the description. You can view the meta description in the page source or using SEO browser extensions.",
+                ),
+                (
+                    "There is only a single meta description on-page",
+                    4,
+                    "Each page should have only one meta description. Multiple descriptions can lead to inconsistent display in search results. Check the page source to ensure there's only one meta description tag.",
+                ),
+                (
+                    "Adequately describes the purpose of the page as a CTA",
+                    5,
+                    "The meta description should act as a call-to-action, enticing users to click through to your page. It should clearly state what the page offers and why users should visit. Evaluate if your description compels action and accurately represents the page content.",
+                ),
             ]
         },
         "Proper Heading Hierarchy": {
             "criteria": [
-                ("Only A Single H1; H2s follow H1 tag; H3s follow H2s, etc…", 7, "Proper use of heading tags (H1, H2, H3) helps search engines understand the structure and importance of content.")
+                (
+                    "Only a single H1; H2s follow H1 tag; H3s follow H2s, etc…",
+                    7,
+                    "Proper heading hierarchy helps search engines understand the structure and importance of your content. Use H1 for the main title, H2 for main sections, H3 for subsections, and so on. To check, use the browser's 'Inspect' tool to view the HTML structure and ensure headings are nested correctly.",
+                )
             ]
         },
         "Image Alt Text": {
             "criteria": [
-                ("Images Include Alt Text With Target Keyword", 3, "Alt text provides a description of images, helping search engines index them and improving accessibility for users with visual impairments."),
-                ("Alt Text Properly Describes Imagery In A Meaningful Way", 2, "Alt text should meaningfully describe the imagery to provide context to search engines and users.")
+                (
+                    "Images include alt text with target keyword",
+                    3,
+                    "Alt text describes images for search engines and visually impaired users. Include your target keyword naturally in the alt text when relevant. To check, inspect the image HTML and look for the 'alt' attribute.",
+                ),
+                (
+                    "Alt text properly describes imagery in a meaningful way",
+                    2,
+                    "Alt text should accurately describe the image content, not just repeat keywords. This improves accessibility and helps search engines understand the context. Review each image's alt text to ensure it provides a clear, concise description.",
+                ),
             ]
         },
         "Schema Markup": {
             "criteria": [
-                ("Schema Is Included On-Page As JSON-LD", 9, "Structured data in JSON-LD format helps search engines understand the content of the page better, improving the chances of rich results."),
-                ("No Errors Or Warnings With Schema Markup", 8, "Ensuring schema markup has no errors improves the likelihood of enhanced search result features."),
-                ("Schema Markup Matches Page Intent", 9, "Schema markup should align with the page’s content and purpose to enhance search visibility.")
+                (
+                    "Schema is included on-page as JSON-LD",
+                    9,
+                    "Schema markup helps search engines understand your content better, potentially leading to rich snippets in search results. Use JSON-LD format for easy implementation. To check, view the page source and look for a script tag containing JSON-LD data.",
+                ),
+                (
+                    "No errors or warnings with schema markup",
+                    8,
+                    "Errors in schema markup can prevent search engines from using it effectively. Use Google's Structured Data Testing Tool to check for errors and warnings in your schema implementation.",
+                ),
+                (
+                    "Schema markup matches page intent",
+                    9,
+                    "The schema type should accurately represent the page content (e.g., Article, Product, FAQ). Mismatched schema can confuse search engines. Review your schema type and ensure it aligns with the page's primary purpose.",
+                ),
             ]
         },
         "Internal Linking": {
             "criteria": [
-                ("Other Pages Properly Point To This One With Target Keyword Included In Anchor Text", 7, "Proper internal linking helps users and search engines navigate your site more effectively, passing authority between pages."),
-                ("This Page Logically Drives Users To The Next Anticipated Step In The User Journey", 6, "Internal links should guide users through a logical flow on your website."),
-                ("This Page Doesn’t Send Users To A Dead End Experience / Poor Off-Ramp", 5, "Avoiding dead-end pages ensures a better user experience and keeps users engaged.")
+                (
+                    "Other pages properly point to this one with target keyword included in anchor text",
+                    7,
+                    "Internal links with relevant anchor text help search engines understand the context and importance of the linked page. Check other pages on your site and ensure they link to this page using descriptive, keyword-rich anchor text when appropriate.",
+                ),
+                (
+                    "This page logically drives users to the next anticipated step in the user journey",
+                    6,
+                    "Internal links should guide users through a logical flow on your website. Analyze the user journey and ensure this page links to the next logical step or related content that users might be interested in.",
+                ),
+                (
+                    "This page doesn't send users to a dead end experience / poor off-ramp",
+                    5,
+                    "Every page should provide clear next steps for users. Ensure this page has relevant internal links, calls-to-action, or related content suggestions to keep users engaged and on your site.",
+                ),
             ]
         },
         "User Engagement Metrics": {
             "criteria": [
-                ("Bounce Rate Meets or Exceeds Baseline", 8, "A lower bounce rate indicates that users find the content relevant and are more likely to stay on the page."),
-                ("Time Spent On-Page Meets or Exceeds Baseline", 9, "More time spent on the page suggests users are engaged with the content."),
-                ("CTR / Average KW Position Meets or Exceeds Baseline", 8, "A higher click-through rate and better average keyword position indicate that the page is well-optimized for search."),
-                ("Visits Meet or Exceed Baseline", 7, "Higher visit numbers suggest that the page is attracting a significant amount of traffic."),
-                ("Conversions / Abandons Meet or Exceed Baseline", 8, "A higher conversion rate with fewer abandons shows that the page effectively meets user intent."),
-                ("Scroll Depth Meets or Exceeds Baseline", 6, "Greater scroll depth indicates that users are consuming more content on the page.")
+                (
+                    "Bounce rate meets or exceeds baseline",
+                    8,
+                    "A low bounce rate indicates that users find the content relevant. Compare the page's bounce rate to your site average or industry benchmarks. You can find this data in Google Analytics or similar analytics tools.",
+                ),
+                (
+                    "Time spent on-page meets or exceeds baseline",
+                    9,
+                    "Longer time on page suggests engaging content. Compare the average time on this page to your site average or industry benchmarks. This data is available in most analytics platforms.",
+                ),
+                (
+                    "CTR / average KW position meets or exceeds baseline",
+                    8,
+                    "High CTR and good keyword positions indicate effective optimization. Check Google Search Console for these metrics and compare them to your site averages or industry benchmarks.",
+                ),
+                (
+                    "Visits meet or exceed baseline",
+                    7,
+                    "Higher visit numbers suggest the page is attracting significant traffic. Compare the page's visit count to your site average or set goals. This data is available in your analytics platform.",
+                ),
+                (
+                    "Conversions / abandons meet or exceed baseline",
+                    8,
+                    "Good conversion rates indicate the page effectively meets user intent. Set up conversion tracking in your analytics tool and compare this page's performance to your site average or industry benchmarks.",
+                ),
+                (
+                    "Scroll depth meets or exceeds baseline",
+                    6,
+                    "Greater scroll depth indicates users are consuming more content. Use scroll depth tracking in your analytics tool to measure how far users scroll on the page, and compare it to your site average.",
+                ),
             ]
         },
         "Primary Topic/Keyword Targeting": {
             "criteria": [
-                ("Keyword Is Included Above The Fold In Content", 10, "Placing the primary keyword above the fold ensures it is one of the first things users and search engines see."),
-                ("Relevant Secondary Keywords Are Included Within Subheads / Body Copy Of Page", 7, "Incorporating secondary keywords throughout the content helps to enhance relevance and rank for multiple search terms."),
-                ("Page Matches Expected Keyword Intent", 9, "Matching the content to the expected intent behind the keywords improves user satisfaction and ranking potential.")
+                (
+                    "Keyword is included above the fold in content",
+                    10,
+                    "Including the primary keyword early in the content helps search engines quickly understand the page topic. Check if your keyword appears in the first paragraph or section of your content, visible without scrolling.",
+                ),
+                (
+                    "Relevant secondary keywords are included within subheads / body copy of page",
+                    7,
+                    "Secondary keywords help establish topical relevance and can help you rank for related terms. Use keyword research tools to identify relevant secondary keywords, then naturally incorporate them into your subheadings and body text.",
+                ),
+                (
+                    "Page matches expected keyword intent",
+                    9,
+                    "Content should align with the user's search intent (informational, navigational, or transactional). Analyze the top-ranking pages for your target keyword to understand the intent, and ensure your content matches it.",
+                ),
             ]
         },
         "URL Slug": {
             "criteria": [
-                ("Short Length", 3, "A short URL slug is easier to read and share, improving user experience and SEO."),
-                ("Omission of Stop Words", 2, "Removing stop words from the URL makes it cleaner and more focused."),
-                ("Aligns With Informational Architecture Of Domain", 4, "A URL that follows the site’s information architecture improves navigation and clarity."),
-                ("Lowercase only", 2, "Using only lowercase letters in the URL helps avoid duplicate content issues."),
-                ("Hyphens only", 2, "Hyphens should be used instead of underscores to separate words in the URL for better readability."),
-                ("Non-parameterized (optional)", 1, "Avoiding parameters in URLs keeps them clean and easier to index."),
-                ("ASCII characters only", 1, "Using ASCII characters in the URL ensures compatibility across different browsers and platforms."),
-                ("Depth of 5 or less from the homepage", 2, "A shallow URL structure (five levels or less from the homepage) is easier for search engines to crawl.")
+                (
+                    "Short length",
+                    3,
+                    "Shorter URLs are easier to read, share, and remember. Aim for 3-5 words in your URL slug. You can check and edit this in your CMS or website platform.",
+                ),
+                (
+                    "Omission of stop words",
+                    2,
+                    "Removing unnecessary words (like 'the', 'a', 'an') makes URLs cleaner and more focused. Review your URL and remove any stop words that don't add value.",
+                ),
+                (
+                    "Aligns with informational architecture of domain",
+                    4,
+                    "URLs should reflect your site's structure. Ensure the URL fits logically within your site's hierarchy. This can usually be set in your CMS or website platform.",
+                ),
+                (
+                    "Lowercase only",
+                    2,
+                    "Using only lowercase letters in URLs helps avoid duplicate content issues. Most CMS automatically enforce this, but check to ensure all letters in your URL are lowercase.",
+                ),
+                (
+                    "Hyphens only",
+                    2,
+                    "Use hyphens (-) instead of underscores (_) or spaces to separate words in URLs. This improves readability for both users and search engines. Check your URL structure and replace any underscores or spaces with hyphens.",
+                ),
+                (
+                    "Non-parameterized (optional)",
+                    1,
+                    "Clean URLs without parameters are preferred. If possible, avoid query strings (e.g., '?id=123') in your URLs. This may require adjustments to your website's configuration.",
+                ),
+                (
+                    "ASCII characters only",
+                    1,
+                    "Stick to standard ASCII characters in URLs for best compatibility. Avoid special characters or non-English letters. This is usually handled automatically by most CMS.",
+                ),
+                (
+                    "Depth of 5 or less from the homepage",
+                    2,
+                    "Keeping URLs close to the homepage in the site structure can boost their perceived importance. Try to keep your URL structure no more than 5 levels deep. This may require reorganizing your site structure.",
+                ),
             ]
         },
         "Quality of Content": {
             "criteria": [
-                ("Accuracy", 10, "Accurate content builds trust with users and search engines, which can improve rankings."),
-                ("Originality", 9, "Original content is more likely to rank well because it provides unique value to users."),
-                ("Tone Of Voice Matches Brand Standards", 8, "Consistency in tone of voice enhances brand recognition and user engagement."),
-                ("Topic Completeness", 10, "Comprehensive content that covers a topic thoroughly is more likely to satisfy user intent and rank well."),
-                ("Readability", 8, "Easy-to-read content improves user experience and retention, which can positively affect rankings."),
-                ("Formatting (paragraph breaks, logical subheading structure)", 7, "Proper formatting helps users and search engines navigate the content more effectively."),
-                ("Content Freshness / Regularly Updated", 9, "Regularly updating content keeps it relevant and improves its chances of ranking well."),
-                ("Page Matches Expected User Intent", 10, "Ensuring the page matches user intent is critical for satisfying user needs and ranking well."),
-                ("Other Pages Don't Cannibalize This One For Content", 8, "Avoiding content cannibalization ensures that this page has a better chance to rank for its target keywords.")
+                (
+                    "Accuracy",
+                    10,
+                    "Ensure all information is factual and up-to-date. Regularly review and update your content. Use credible sources and link to them when appropriate.",
+                ),
+                (
+                    "Originality",
+                    9,
+                    "Create unique content that adds value. Avoid duplicating content from other sources. Use plagiarism checkers to ensure your content is original.",
+                ),
+                (
+                    "Tone of voice matches brand standards",
+                    8,
+                    "Maintain a consistent brand voice across all content. Develop and follow brand guidelines for tone and style. Regularly review content to ensure it aligns with your brand voice.",
+                ),
+                (
+                    "Topic completeness",
+                    10,
+                    "Cover the topic comprehensively. Research competing content and ensure you're addressing all relevant aspects of the topic. Consider using topic clustering techniques to cover subjects thoroughly.",
+                ),
+                (
+                    "Readability",
+                    8,
+                    "Content should be easy to read and understand. Use tools like the Flesch-Kincaid readability test to assess and improve your content's readability. Break up text with subheadings, short paragraphs, and bullet points.",
+                ),
+                (
+                    "Formatting (paragraph breaks, logical subheading structure)",
+                    7,
+                    "Well-formatted content improves user experience and readability. Use short paragraphs, clear subheadings, and appropriate use of bold and italic text. Ensure your content has a logical structure that's easy to follow.",
+                ),
+                (
+                    "Content freshness / regularly updated",
+                    9,
+                    "Keep your content current and relevant. Regularly update your content with new information, examples, or data. Add a 'last updated' date to your pages to show freshness.",
+                ),
+                (
+                    "Page matches expected user intent",
+                    10,
+                    "Ensure your content aligns with what users are looking for when they search for your target keywords. Analyze top-ranking pages and user feedback to understand and match user intent.",
+                ),
+                (
+                    "Other pages don't cannibalize this one for content",
+                    8,
+                    "Avoid having multiple pages competing for the same keywords. Conduct a content audit to identify and resolve any cannibalization issues. Consider consolidating similar content or using canonical tags where appropriate.",
+                ),
             ]
-        }
+        },
     },
     "Off-Page": {
         "Page Authority vs Top 10": {
             "criteria": [
-                ("Page Authority Is Greater Than Average Of Top 10 Results", 7, "A page with higher authority than its competitors is more likely to rank higher in search results.")
+                (
+                    "Page authority is greater than average of top 10 results",
+                    7,
+                    "Page Authority (PA) is a metric that predicts how well a page will rank. Use tools like Moz to check your PA and compare it to the average PA of the top 10 results for your target keyword. If your PA is lower, focus on building high-quality backlinks to improve it.",
+                )
             ]
         },
         "Page Authority vs Top 3": {
             "criteria": [
-                ("Page Authority Is Greater Than Average Of Top 3 Results", 9, "Having higher authority compared to the top 3 results can significantly improve ranking potential.")
+                (
+                    "Page authority is greater than average of top 3 results",
+                    9,
+                    "Comparing your PA to the top 3 results gives you a benchmark for highly competitive positions. Use SEO tools to check the PA of the top 3 results and aim to match or exceed their average. This often requires a strong backlink profile and excellent on-page optimization.",
+                )
             ]
         },
         "Backlinks from Relevant Domains": {
             "criteria": [
-                ("Backlinks Are From Topically Relevant Domains", 7, "Links from relevant domains signal to search engines that your content is trustworthy and authoritative.")
+                (
+                    "Backlinks are from topically relevant domains",
+                    7,
+                    "Links from sites in your industry or niche carry more weight. Use backlink analysis tools to check the relevance of your linking domains. Focus on acquiring links from sites that are topically related to your content.",
+                )
             ]
         },
         "Backlink Placement": {
             "criteria": [
-                ("Backlinks Are Placed Higher Up On Sourced Pages / Are Likely To Be Clicked", 3, "Backlinks that are prominently placed are more likely to be clicked and pass more authority.")
+                (
+                    "Backlinks are placed higher up on sourced pages / are likely to be clicked",
+                    3,
+                    "Links placed prominently on a page (e.g., in the main content area rather than the footer) are more valuable. Analyze your backlinks to see where they appear on the linking pages. Aim for contextual links within the main content of high-quality pages.",
+                )
             ]
         },
         "Backlink Anchor Text": {
             "criteria": [
-                ("Backlinks Contain Topically Relevant Anchor Text", 6, "Anchor text that includes relevant keywords helps search engines understand the context of the linked page.")
+                (
+                    "Backlinks contain topically relevant anchor text",
+                    6,
+                    "Anchor text helps search engines understand what the linked page is about. Analyze your backlinks' anchor text using SEO tools. Aim for a natural mix of branded, keyword-rich, and generic anchor texts, avoiding over-optimization.",
+                )
             ]
         },
         "Backlink Traffic": {
             "criteria": [
-                ("Backlinks Are Placed On Pages That Actually Drive Visits", 7, "Backlinks from pages that drive traffic can increase the visibility and authority of your page.")
+                (
+                    "Backlinks are placed on pages that actually drive visits",
+                    7,
+                    "Links from pages with high traffic can increase your visibility and drive referral traffic. Use tools like Ahrefs to estimate the traffic of pages linking to you. Focus on acquiring links from popular, high-traffic pages in your niche.",
+                )
             ]
-        }
+        },
     },
     "Technical": {
         "Canonical Tag": {
             "criteria": [
-                ("Canonical Tag Contains Self-Reference", 6, "A canonical tag helps avoid duplicate content issues by telling search engines which version of a page is the preferred one.")
+                (
+                    "Canonical tag contains self-reference",
+                    6,
+                    "The canonical tag tells search engines which version of a page is the preferred one to index. Check your page's HTML for the canonical tag in the <head> section. Ensure it points to the current URL to avoid indexing issues.",
+                )
             ]
         },
         "Hreflang Tag": {
             "criteria": [
-                ("Hreflang Tag (Optional) Is Correct, Targets The Right Locations, And References Other Translated Page Equivalents", 6, "This tag indicates to search engines which language you're using on a specific page and its regional targeting.")
+                (
+                    "Hreflang tag (optional) is correct, targets the right locations, and references other translated page equivalents",
+                    6,
+                    "Hreflang tags help search engines serve the correct language version of your page. If your site has multiple language versions, check the <head> section for correct hreflang implementation. Ensure each language version is properly referenced.",
+                )
             ]
         },
         "Indexability": {
             "criteria": [
-                ("Page Is Indexable By Search Engines / Isn’t Blocked By Meta Tags Or Robots.txt", 10, "Ensuring that a page is indexable means it can be crawled and included in search results.")
+                (
+                    "Page is indexable by search engines / isn't blocked by meta tags or robots.txt",
+                    10,
+                    "For a page to appear in search results, it must be indexable. Check your robots.txt file and the page's HTML for any 'noindex' directives. Use Google Search Console's URL Inspection tool to verify if the page is indexable.",
+                )
             ]
         },
         "Sitemap Inclusion": {
             "criteria": [
-                ("Page Is Included In Sitemap.xml file", 2, "Including a page in the sitemap.xml file helps search engines discover it more easily.")
+                (
+                    "Page is included in sitemap.xml file",
+                    2,
+                    "Sitemaps help search engines discover and understand your site structure. Check your sitemap.xml file to ensure the page is listed. You can usually find your sitemap at yourdomain.com/sitemap.xml or check your CMS settings.",
+                )
             ]
         },
         "Page Orphan Status": {
             "criteria": [
-                ("Page Isn’t Orphaned", 2, "Orphan pages, which are not linked to from other pages, can be harder for search engines to find and index.")
+                (
+                    "Page isn't orphaned",
+                    2,
+                    "Orphan pages are not linked to from any other page on your site, making them hard to find. Use a site crawling tool to identify orphan pages. Ensure all important pages are linked to from at least one other page on your site.",
+                )
             ]
         },
         "Renderability": {
             "criteria": [
-                ("Page Elements Are Renderable By Search Engines", 6, "Ensuring that search engines can properly render the page content is crucial for accurate indexing.")
+                (
+                    "Page elements are renderable by search engines",
+                    6,
+                    "Search engines should be able to render all important content on your page. Use Google Search Console's URL Inspection tool to see how Googlebot renders your page. Ensure all critical content is visible and not reliant on JavaScript that might not be executed by search engine crawlers.",
+                )
             ]
         },
         "Web Core Vitals": {
             "criteria": [
-                ("Page Passes Web Core Vitals Metrics / Exceeds Industry Average", 3, "These are a set of metrics related to speed, responsiveness, and visual stability, which affect user experience and ranking.")
+                (
+                    "Page passes Web Core Vitals metrics / exceeds industry average",
+                    3,
+                    "Web Core Vitals are a set of metrics that measure user experience in terms of loading performance, interactivity, and visual stability. Use Google PageSpeed Insights or the Core Web Vitals report in Google Search Console to check your performance. Aim to have all Core Web Vitals in the 'good' range.",
+                )
             ]
-        }
-    }
+        },
+        "Mobile Friendliness": {
+            "criteria": [
+                (
+                    "Page is mobile-friendly and responsive",
+                    8,
+                    "With mobile-first indexing, having a mobile-friendly site is crucial. Use Google's Mobile-Friendly Test tool to check your page. Ensure your site uses responsive design and provides a good user experience on all device sizes.",
+                )
+            ]
+        },
+        "HTTPS": {
+            "criteria": [
+                (
+                    "Page is served over HTTPS",
+                    5,
+                    "HTTPS is a ranking factor and provides security for your users. Check if your URL starts with 'https://'. If not, obtain an SSL certificate and implement HTTPS across your entire site.",
+                )
+            ]
+        },
+    },
 }
 
 # Calculate bucket weights
