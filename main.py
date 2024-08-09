@@ -7,6 +7,10 @@ from docx import Document
 # Set up the OpenAI API key prompt
 st.sidebar.title("Setup")
 openai_api_key = st.sidebar.text_input("Enter your OpenAI API key", type="password")
+os.environ["OPENAI_API_KEY"] = openai_api_key
+
+# Initialize OpenAI client
+client = OpenAI()
 
 # Define the SEO factors with criteria, explanations, and weights
 seo_factors = {
@@ -183,15 +187,17 @@ bucket_weights = {
 def get_user_input(factor, criteria):
     responses = {}
     st.subheader(factor)
+    st.markdown(f"<div style='background-color: #f0f2f6; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
     for i, (criterion, weight, help_text) in enumerate(criteria):
-        col1, col2 = st.columns([8, 1])
+        col1, col2 = st.columns([4, 1])
         with col1:
             responses[criterion] = {
                 "response": st.radio(criterion, ["Yes", "No"], index=1, key=f"{factor}_{i}"),
                 "weight": weight
             }
         with col2:
-            st.markdown(f'<span style="font-size:20px;" title="{help_text}">❓</span>', unsafe_allow_html=True)
+            st.markdown(f'<div title="{help_text}" style="cursor: help; background-color: #e1e4e8; padding: 5px; border-radius: 50%; text-align: center; font-weight: bold;">?</div>', unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
     return responses
 
 def calculate_score(inputs):
@@ -205,8 +211,8 @@ def calculate_score(inputs):
 
 def get_gpt4_recommendations(inputs):
     prompt = f"Based on the following SEO audit results, provide recommendations for improvement:\n\n{inputs}\n\nPlease provide specific, actionable recommendations for each area that needs improvement."
-    response = openai.ChatCompletion.create(
-        model="gpt-4o",
+    response = client.chat.completions.create(
+        model="gpt-4",
         messages=[
             {"role": "system", "content": "You are an SEO expert providing recommendations based on an audit."},
             {"role": "user", "content": prompt}
@@ -238,34 +244,38 @@ def export_to_word(inputs, scores, recommendations):
 def main():
     st.title("SEO Ranking Likelihood Calculator")
 
-    # Display sections with headers for each bucket
+    inputs = {}
     for bucket, factors in seo_factors.items():
-        st.markdown(f"## {bucket} Factors")
+        st.sidebar.subheader(bucket)
         bucket_inputs = {}
         for factor, data in factors.items():
-            st.markdown(f"### {factor}")
             bucket_inputs[factor] = get_user_input(factor, data["criteria"])
+        inputs[bucket] = bucket_inputs
 
     if st.sidebar.button("Calculate Score"):
         scores = {}
         for bucket, factors in seo_factors.items():
             bucket_score = 0
             for factor in factors.keys():
-                bucket_score += calculate_score(bucket_inputs[factor])
+                bucket_score += calculate_score(inputs[bucket][factor])
             scores[bucket] = (bucket_score / len(factors)) * 10
 
         overall_score = sum(score * bucket_weights[bucket] for bucket, score in scores.items())
         scores["Overall"] = overall_score
 
         st.subheader("SEO Scores")
+        st.markdown("<div style='background-color: #e6f3ff; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
         for bucket, score in scores.items():
             st.write(f"{bucket}: {score:.2f}/10")
+        st.markdown("</div>", unsafe_allow_html=True)
 
-        recommendations = get_gpt4_recommendations(bucket_inputs)
+        recommendations = get_gpt4_recommendations(inputs)
         st.subheader("Recommendations")
+        st.markdown("<div style='background-color: #e6ffe6; padding: 10px; border-radius: 5px;'>", unsafe_allow_html=True)
         st.write(recommendations)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-        export_to_word(bucket_inputs, scores, recommendations)
+        export_to_word(inputs, scores, recommendations)
         st.success("Results exported to 'seo_audit_results.docx'")
 
 if __name__ == "__main__":
