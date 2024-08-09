@@ -192,8 +192,9 @@ def get_user_input(factor, criteria):
     for i, (criterion, weight, help_text) in enumerate(criteria):
         col1, col2 = st.columns([4, 1])
         with col1:
+            options = ["Yes", "No", "N/A"] if "optional" in criterion.lower() else ["Yes", "No"]
             responses[criterion] = {
-                "response": st.radio(criterion, ["Yes", "No"], index=1, key=f"{factor}_{i}"),
+                "response": st.radio(criterion, options, index=1, key=f"{factor}_{i}"),
                 "weight": weight
             }
         with col2:
@@ -224,43 +225,32 @@ def calculate_score(inputs):
     for criterion, data in inputs.items():
         if data["response"] == "Yes":
             score += data["weight"]
-        max_score += data["weight"]
+        if data["response"] != "N/A":
+            max_score += data["weight"]
     return score / max_score * 10 if max_score > 0 else 0
-
-def get_gpt4_recommendations(inputs):
-    st.write("Generating recommendations with OpenAI's GPT-4...")
-    prompt = f"Based on the following SEO audit results, provide recommendations for improvement:\n\n{inputs}\n\nPlease provide specific, actionable recommendations for each area that needs improvement."
-    try:
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {"role": "system", "content": "You are an SEO expert providing recommendations based on an audit."},
-                {"role": "user", "content": prompt}
-            ]
-        )
-        st.write("Recommendations generated successfully!")
-        return response.choices[0].message.content
-    except Exception as e:
-        st.error(f"Error generating recommendations: {str(e)}")
-        return "Unable to generate recommendations at this time."
 
 def export_to_word(inputs, scores, recommendations):
     doc = Document()
     doc.add_heading('SEO Audit Results', 0)
 
-    for bucket, factors in seo_factors.items():
-        doc.add_heading(f"{bucket} Factors", level=1)
-        for factor, criteria in factors.items():
-            doc.add_heading(factor, level=2)
-            for criterion, data in inputs[bucket][factor].items():
-                doc.add_paragraph(f"{criterion}: {data['response']} (Weight: {data['weight']})")
-
+    # Scores
     doc.add_heading('Scores', level=1)
     for bucket, score in scores.items():
         doc.add_paragraph(f"{bucket}: {score:.2f}/10")
 
+    # Recommendations
     doc.add_heading('Recommendations', level=1)
     doc.add_paragraph(recommendations)
+
+    # Selected Criteria
+    doc.add_heading('Selected Criteria', level=1)
+    for bucket, factors in seo_factors.items():
+        doc.add_heading(f"{bucket} Factors", level=2)
+        for factor, criteria in factors.items():
+            doc.add_heading(factor, level=3)
+            for criterion, data in inputs[bucket][factor].items():
+                if data['response'] != "N/A":
+                    doc.add_paragraph(f"{criterion}: {data['response']}")
 
     # Save the document to a BytesIO object
     doc_bytes = io.BytesIO()
