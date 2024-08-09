@@ -306,16 +306,18 @@ def export_to_word(inputs, scores, recommendations, estimated_ranking):
 
     # Recommendations
     doc.add_heading('Recommendations', level=1)
-
+    
     # Convert markdown to HTML
     html = markdown.markdown(recommendations)
-
+    
     # Parse HTML
     soup = BeautifulSoup(html, 'html.parser')
     
     # Function to add formatted text to the document
     def add_formatted_text(element, level=0):
-        if element.name == 'h3':
+        if isinstance(element, str):
+            doc.add_paragraph(element)
+        elif element.name == 'h3':
             doc.add_heading(element.text, level=2)
         elif element.name == 'h4':
             doc.add_heading(element.text, level=3)
@@ -331,13 +333,10 @@ def export_to_word(inputs, scores, recommendations, estimated_ranking):
             doc.add_paragraph(element.text).bold = True
         else:
             for child in element.children:
-                if isinstance(child, str):
-                    doc.add_paragraph(child)
-                else:
-                    add_formatted_text(child, level+1)
+                add_formatted_text(child, level+1)
 
     # Add formatted recommendations
-    for element in soup.body.children:
+    for element in soup.descendants:
         add_formatted_text(element)
 
     # Selected Criteria
