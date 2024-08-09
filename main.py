@@ -22,9 +22,6 @@ def get_openai_api_key():
         return api_key
     return None
 
-# Initialize OpenAI client only if API key is provided
-client = OpenAI() if api_key else None
-
 # Define the SEO factors with criteria, explanations, and weights
 seo_factors = {
     "On-Page": {
