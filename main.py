@@ -8,120 +8,168 @@ from docx import Document
 # Set up OpenAI API key
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-# Define the SEO factors with criteria and explanations
+# Define the SEO factors with criteria, explanations, and weights
 seo_factors = {
     "On-Page": {
-        "H1 Tag": [
-            "Is Included On-Page At Top Of Heading Hierarchy",
-            "Contains Proper Length",
-            "Contains Primary Keyword",
-            "There Is Only A Single H1 Tag On-Page"
-        ],
-        "Meta Title": [
-            "Contains Proper Length",
-            "Contains Primary Keyword",
-            "There Is Only A Single Meta Title On-Page"
-        ],
-        "Meta Description": [
-            "Contains Proper Length",
-            "Contains Primary Keyword",
-            "There Is Only A Single Meta Description On-Page",
-            "Adequately Describes The Purpose Of The Page As A CTA"
-        ],
-        "Proper Heading Hierarchy": [
-            "Only A Single H1; H2s follow H1 tag; H3s follow H2s, etc…"
-        ],
-        "Image Alt Text": [
-            "Images Include Alt Text With Target Keyword",
-            "Alt Text Properly Describes Imagery In A Meaningful Way"
-        ],
-        "Schema Markup": [
-            "Schema Is Included On-Page As JSON-LD",
-            "No Errors Or Warnings With Schema Markup",
-            "Schema Markup Matches Page Intent"
-        ],
-        "Internal Linking": [
-            "Other Pages Properly Point To This One With Target Keyword Included In Anchor Text",
-            "This Page Logically Drives Users To The Next Anticipated Step In The User Journey",
-            "This Page Doesn’t Send Users To A Dead End Experience / Poor Off-Ramp"
-        ],
-        "User Engagement Metrics": [
-            "Bounce Rate Meets or Exceeds Baseline",
-            "Time Spent On-Page Meets or Exceeds Baseline",
-            "CTR / Average KW Position Meets or Exceeds Baseline",
-            "Visits Meet or Exceed Baseline",
-            "Conversions / Abandons Meet or Exceed Baseline",
-            "Scroll Depth Meets or Exceeds Baseline"
-        ],
-        "Primary Topic/Keyword Targeting": [
-            "Keyword Is Included Above The Fold In Content",
-            "Relevant Secondary Keywords Are Included Within Subheads / Body Copy Of Page",
-            "Page Matches Expected Keyword Intent"
-        ],
-        "URL Slug": [
-            "Short Length",
-            "Omission of Stop Words",
-            "Aligns With Informational Architecture Of Domain",
-            "Lowercase only",
-            "Hyphens only",
-            "Non-parameterized (optional)",
-            "ASCII characters only",
-            "Depth of 5 or less from the homepage"
-        ],
-        "Quality of Content": [
-            "Accuracy",
-            "Originality",
-            "Tone Of Voice Matches Brand Standards",
-            "Topic Completeness",
-            "Readability",
-            "Formatting (paragraph breaks, logical subheading structure)",
-            "Content Freshness / Regularly Updated",
-            "Page Matches Expected User Intent",
-            "Other Pages Don't Cannibalize This One For Content"
-        ]
+        "H1 Tag": {
+            "criteria": [
+                ("Is Included On-Page At Top Of Heading Hierarchy", 10),
+                ("Contains Proper Length", 8),
+                ("Contains Primary Keyword", 9),
+                ("There Is Only A Single H1 Tag On-Page", 8)
+            ]
+        },
+        "Meta Title": {
+            "criteria": [
+                ("Contains Proper Length", 9),
+                ("Contains Primary Keyword", 10),
+                ("There Is Only A Single Meta Title On-Page", 8)
+            ]
+        },
+        "Meta Description": {
+            "criteria": [
+                ("Contains Proper Length", 5),
+                ("Contains Primary Keyword", 6),
+                ("There Is Only A Single Meta Description On-Page", 4),
+                ("Adequately Describes The Purpose Of The Page As A CTA", 5)
+            ]
+        },
+        "Proper Heading Hierarchy": {
+            "criteria": [
+                ("Only A Single H1; H2s follow H1 tag; H3s follow H2s, etc…", 7)
+            ]
+        },
+        "Image Alt Text": {
+            "criteria": [
+                ("Images Include Alt Text With Target Keyword", 3),
+                ("Alt Text Properly Describes Imagery In A Meaningful Way", 2)
+            ]
+        },
+        "Schema Markup": {
+            "criteria": [
+                ("Schema Is Included On-Page As JSON-LD", 9),
+                ("No Errors Or Warnings With Schema Markup", 8),
+                ("Schema Markup Matches Page Intent", 9)
+            ]
+        },
+        "Internal Linking": {
+            "criteria": [
+                ("Other Pages Properly Point To This One With Target Keyword Included In Anchor Text", 7),
+                ("This Page Logically Drives Users To The Next Anticipated Step In The User Journey", 6),
+                ("This Page Doesn’t Send Users To A Dead End Experience / Poor Off-Ramp", 5)
+            ]
+        },
+        "User Engagement Metrics": {
+            "criteria": [
+                ("Bounce Rate Meets or Exceeds Baseline", 8),
+                ("Time Spent On-Page Meets or Exceeds Baseline", 9),
+                ("CTR / Average KW Position Meets or Exceeds Baseline", 8),
+                ("Visits Meet or Exceed Baseline", 7),
+                ("Conversions / Abandons Meet or Exceed Baseline", 8),
+                ("Scroll Depth Meets or Exceeds Baseline", 6)
+            ]
+        },
+        "Primary Topic/Keyword Targeting": {
+            "criteria": [
+                ("Keyword Is Included Above The Fold In Content", 10),
+                ("Relevant Secondary Keywords Are Included Within Subheads / Body Copy Of Page", 7),
+                ("Page Matches Expected Keyword Intent", 9)
+            ]
+        },
+        "URL Slug": {
+            "criteria": [
+                ("Short Length", 3),
+                ("Omission of Stop Words", 2),
+                ("Aligns With Informational Architecture Of Domain", 4),
+                ("Lowercase only", 2),
+                ("Hyphens only", 2),
+                ("Non-parameterized (optional)", 1),
+                ("ASCII characters only", 1),
+                ("Depth of 5 or less from the homepage", 2)
+            ]
+        },
+        "Quality of Content": {
+            "criteria": [
+                ("Accuracy", 10),
+                ("Originality", 9),
+                ("Tone Of Voice Matches Brand Standards", 8),
+                ("Topic Completeness", 10),
+                ("Readability", 8),
+                ("Formatting (paragraph breaks, logical subheading structure)", 7),
+                ("Content Freshness / Regularly Updated", 9),
+                ("Page Matches Expected User Intent", 10),
+                ("Other Pages Don't Cannibalize This One For Content", 8)
+            ]
+        }
     },
     "Off-Page": {
-        "Page Authority vs Top 10": [
-            "Page Authority Is Greater Than Average Of Top 10 Results"
-        ],
-        "Page Authority vs Top 3": [
-            "Page Authority Is Greater Than Average Of Top 3 Results"
-        ],
-        "Backlinks from Relevant Domains": [
-            "Backlinks Are From Topically Relevant Domains"
-        ],
-        "Backlink Placement": [
-            "Backlinks Are Placed Higher Up On Sourced Pages / Are Likely To Be Clicked"
-        ],
-        "Backlink Anchor Text": [
-            "Backlinks Contain Topically Relevant Anchor Text"
-        ],
-        "Backlink Traffic": [
-            "Backlinks Are Placed On Pages That Actually Drive Visits"
-        ]
+        "Page Authority vs Top 10": {
+            "criteria": [
+                ("Page Authority Is Greater Than Average Of Top 10 Results", 7)
+            ]
+        },
+        "Page Authority vs Top 3": {
+            "criteria": [
+                ("Page Authority Is Greater Than Average Of Top 3 Results", 9)
+            ]
+        },
+        "Backlinks from Relevant Domains": {
+            "criteria": [
+                ("Backlinks Are From Topically Relevant Domains", 7)
+            ]
+        },
+        "Backlink Placement": {
+            "criteria": [
+                ("Backlinks Are Placed Higher Up On Sourced Pages / Are Likely To Be Clicked", 3)
+            ]
+        },
+        "Backlink Anchor Text": {
+            "criteria": [
+                ("Backlinks Contain Topically Relevant Anchor Text", 6)
+            ]
+        },
+        "Backlink Traffic": {
+            "criteria": [
+                ("Backlinks Are Placed On Pages That Actually Drive Visits", 7)
+            ]
+        }
     },
     "Technical": {
-        "Canonical Tag": [
-            "Canonical Tag Contains Self-Reference"
-        ],
-        "Hreflang Tag": [
-            "Hreflang Tag (Optional) Is Correct, Targets The Right Locations, And References Other Translated Page Equivalents"
-        ],
-        "Indexability": [
-            "Page Is Indexable By Search Engines / Isn’t Blocked By Meta Tags Or Robots.txt"
-        ],
-        "Sitemap Inclusion": [
-            "Page Is Included In Sitemap.xml file"
-        ],
-        "Page Orphan Status": [
-            "Page Isn’t Orphaned"
-        ],
-        "Renderability": [
-            "Page Elements Are Renderable By Search Engines"
-        ],
-        "Web Core Vitals": [
-            "Page Passes Web Core Vitals Metrics / Exceeds Industry Average"
-        ]
+        "Canonical Tag": {
+            "criteria": [
+                ("Canonical Tag Contains Self-Reference", 6)
+            ]
+        },
+        "Hreflang Tag": {
+            "criteria": [
+                ("Hreflang Tag (Optional) Is Correct, Targets The Right Locations, And References Other Translated Page Equivalents", 6)
+            ]
+        },
+        "Indexability": {
+            "criteria": [
+                ("Page Is Indexable By Search Engines / Isn’t Blocked By Meta Tags Or Robots.txt", 10)
+            ]
+        },
+        "Sitemap Inclusion": {
+            "criteria": [
+                ("Page Is Included In Sitemap.xml file", 2)
+            ]
+        },
+        "Page Orphan Status": {
+            "criteria": [
+                ("Page Isn’t Orphaned", 2)
+            ]
+        },
+        "Renderability": {
+            "criteria": [
+                ("Page Elements Are Renderable By Search Engines", 6)
+            ]
+        },
+        "Web Core Vitals": {
+            "criteria": [
+                ("Page Passes Web Core Vitals Metrics / Exceeds Industry Average", 3)
+            ]
+        }
     }
 }
 
@@ -135,17 +183,21 @@ bucket_weights = {
 def get_user_input(factor, criteria):
     responses = {}
     st.subheader(factor)
-    for i, criterion in enumerate(criteria):
-        responses[criterion] = st.radio(criterion, ["Yes", "No"], index=1, key=f"{factor}_{i}")
+    for i, (criterion, weight) in enumerate(criteria):
+        responses[criterion] = {
+            "response": st.radio(criterion, ["Yes", "No"], index=1, key=f"{factor}_{i}"),
+            "weight": weight
+        }
     return responses
 
-def calculate_score(inputs, factors):
+def calculate_score(inputs):
     score = 0
-    max_score = len(inputs)
-    for criterion, response in inputs.items():
-        if response == "Yes":
-            score += 1
-    return (score / max_score) * 10
+    max_score = 0
+    for criterion, data in inputs.items():
+        if data["response"] == "Yes":
+            score += data["weight"]
+        max_score += data["weight"]
+    return (score / max_score) * 10 if max_score > 0 else 0
 
 def get_gpt4_recommendations(inputs):
     prompt = f"Based on the following SEO audit results, provide recommendations for improvement:\n\n{inputs}\n\nPlease provide specific, actionable recommendations for each area that needs improvement."
@@ -166,8 +218,8 @@ def export_to_word(inputs, scores, recommendations):
         doc.add_heading(f"{bucket} Factors", level=1)
         for factor, criteria in factors.items():
             doc.add_heading(factor, level=2)
-            for criterion, response in inputs[factor].items():
-                doc.add_paragraph(f"{criterion}: {response}")
+            for criterion, data in inputs[bucket][factor].items():
+                doc.add_paragraph(f"{criterion}: {data['response']} (Weight: {data['weight']})")
 
     doc.add_heading('Scores', level=1)
     for bucket, score in scores.items():
@@ -186,8 +238,8 @@ def main():
     for bucket, factors in seo_factors.items():
         st.sidebar.subheader(bucket)
         bucket_inputs = {}
-        for factor, criteria in factors.items():
-            bucket_inputs[factor] = get_user_input(factor, criteria)
+        for factor, data in factors.items():
+            bucket_inputs[factor] = get_user_input(factor, data["criteria"])
         inputs[bucket] = bucket_inputs
 
     if st.sidebar.button("Calculate Score"):
@@ -195,7 +247,7 @@ def main():
         for bucket, factors in seo_factors.items():
             bucket_score = 0
             for factor in factors.keys():
-                bucket_score += calculate_score(inputs[bucket][factor], factors[factor])
+                bucket_score += calculate_score(inputs[bucket][factor])
             scores[bucket] = (bucket_score / len(factors)) * 10
 
         overall_score = sum(score * bucket_weights[bucket] for bucket, score in scores.items())
